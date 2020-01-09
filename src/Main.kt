@@ -1,5 +1,6 @@
-import java.util.*
 import kotlin.math.min
+import kotlin.math.max
+import kotlin.math.abs
 
 val MOD = 1_000_000_007
 
@@ -20,14 +21,17 @@ private fun readInt() = readLn().toInt()
 private fun readStrings() = readLn().split(" ")
 private fun readInts() = readStrings().map { it.toInt() }.toIntArray()
 private fun readLongs() = readStrings().map { it.toLong() }.toLongArray()
-private fun debug(msg: () -> String) {
+private inline fun debug(msg: () -> String) {
   if (isDebug) System.err.println(msg())
 }
 private fun debug(a: LongArray) {
-  if (isDebug) debug{a.joinToString(" ")}
+  debug{a.joinToString(" ")}
 }
 private fun debug(a: IntArray) {
-  if (isDebug) debug{a.joinToString(" ")}
+  debug{a.joinToString(" ")}
+}
+private fun debug(a: BooleanArray) {
+  debug{a.map{if(it) 1 else 0}.joinToString("")}
 }
 private fun debugDim(A: Array<IntArray>) {
   if (isDebug) {
