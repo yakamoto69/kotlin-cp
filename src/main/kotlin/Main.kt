@@ -9,6 +9,49 @@ fun main() {
   println(N)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 private val isDebug = try {
   // なんか本番でエラーでる
   System.getenv("MY_DEBUG") != null
@@ -17,7 +60,6 @@ private val isDebug = try {
 }
 
 private fun readLn() = readLine()!!
-private fun readInt() = readLn().toInt()
 private fun readStrings() = readLn().split(" ")
 private fun readInts() = readStrings().map { it.toInt() }.toIntArray()
 private fun readLongs() = readStrings().map { it.toLong() }.toLongArray()

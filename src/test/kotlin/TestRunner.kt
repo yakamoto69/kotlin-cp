@@ -3,7 +3,8 @@ import TestRunner.State.*
 import java.lang.StringBuilder
 
 fun main(arg: Array<String>) {
-  TestRunner().call(File(arg[0]))
+  val file = File(TestRunner::class.java.getResource(arg[0])!!.toURI())
+  TestRunner().call(file)
 }
 
 private class TestRunner {
