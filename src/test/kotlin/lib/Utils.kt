@@ -25,3 +25,16 @@ fun upperBound(A: IntArray, s: Int, x: Int): Int {
   }
   return h
 }
+
+fun divisors(x: Int): MutableList<Int> {
+  val res = mutableListOf<Int>()
+  var d = 1
+  while (d * d <= x) {
+    if (x % d == 0) {
+      res += d
+      if (d * d != x) res += x / d
+    }
+    ++d
+  }
+  return res
+}

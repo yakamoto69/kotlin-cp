@@ -1,6 +1,6 @@
 package lib
 
-class UnionFind(val n: Int) {
+class UnionFind(n: Int) {
   private val par = IntArray(n){it}
   val rank = IntArray(n){1} // 集合の要素数
   private val visits = IntArray(n) // 訪れた場所をfind毎に用意するのがもったいないのでつかいまわす
