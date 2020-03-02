@@ -78,13 +78,20 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   private fun nl() = next().toLong()
   private fun ns() = next()
   private fun na(n: Int, offset: Int = 0): IntArray {
-    return map(n, offset) { ni() }
+    return map(n) { ni() + offset }
+  }
+  private fun nal(n: Int, offset: Int = 0): LongArray {
+    val res = LongArray(n)
+    for (i in 0 until n) {
+      res[i] = nl()
+    }
+    return res
   }
 
-  private inline fun map(n: Int, offset: Int = 0, f: (Int) -> Int): IntArray {
+  private inline fun map(n: Int, f: (Int) -> Int): IntArray {
     val res = IntArray(n)
     for (i in 0 until n) {
-      res[i] = f(i + offset)
+      res[i] = f(i)
     }
     return res
   }
@@ -122,9 +129,6 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     abs(-10)
   }
 }
-
-fun <A, B> pair(a: A, b: B) = RPair(a, b)
-data class RPair<A, B>(val _1: A, val _2: B)
 
 fun main() {
   val out = java.io.PrintWriter(System.out)
