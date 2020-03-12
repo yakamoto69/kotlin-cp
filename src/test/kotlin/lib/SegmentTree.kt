@@ -33,4 +33,26 @@ class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
 
     return res
   }
+
+  // 条件を満たすか。maxなら '>' minなら '<' が使える
+  private inline fun contains(a: Int, x: Int): Boolean = a < x
+  /**
+   * @param x 左右どちらからか最初に a < x になる場所を探す
+   * @param [a, b) 調べる範囲
+   * @return -1
+   */
+  fun find(x: Int, a: Int = 0, b: Int = N, k: Int = 1, l: Int = 0, r: Int = N): Int {
+    if (a >= r || l >= b) return -1// ノードが範囲からはずれてる
+    if (!contains(dat[k], x)) return -1
+    if (l + 1 == r) return l // 0-indexed
+
+    val m = (l + r) / 2
+    val lft = k * 2
+    val rgt = lft + 1
+
+    // 左から探す。右から探したい場合は左右を逆にすればいい
+    val ans = find(x, a, b, lft, l, m)
+    if (ans != -1) return ans
+    return find(x, a, b, rgt, m, r)
+  }
 }
