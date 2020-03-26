@@ -6,7 +6,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-val MOD = 1_000_000_007
+val MOD = 1_000_000_007L
 
 class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   fun solve() {
@@ -112,7 +112,7 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     debug { a.map { if (it) 1 else 0 }.joinToString("") }
   }
 
-  private fun debugDim(A: Array<IntArray>) {
+  private fun debugDim(A: Array<LongArray>) {
     if (isDebug) {
       for (a in A) {
         debug(a)

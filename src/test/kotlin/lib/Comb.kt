@@ -10,7 +10,7 @@ class Comb(n: Int, val mod: Int) {
       F[i] = F[i - 1] * i % mod
     }
     I[n] = powMod(F[n], (mod - 2).toLong(), mod)
-    for (i in n - 1 downTo 1) {
+    for (i in n - 1 downTo 0) {
       I[i] = I[i + 1] * (i + 1) % mod
     }
   }
