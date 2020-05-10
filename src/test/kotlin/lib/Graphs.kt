@@ -12,7 +12,7 @@ fun traceBfs(g: Array<IntArray>, rt: Int = 0): Array<IntArray> {
   val p = IntArray(n){-2}
   var cur = 0
   var last = 1
-  p[0] = -1
+  p[rt] = -1
   q[0] = rt
   d[rt] = 0
   while (cur < last) {

@@ -83,9 +83,19 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   private fun nal(n: Int, offset: Int = 0): LongArray {
     val res = LongArray(n)
     for (i in 0 until n) {
-      res[i] = nl()
+      res[i] = nl() + offset
     }
     return res
+  }
+
+  private fun na2(n: Int, offset: Int = 0): Array<IntArray> {
+    val a  = Array(2){IntArray(n)}
+    for (i in 0 until n) {
+      for (e in a) {
+        e[i] = ni() + offset
+      }
+    }
+    return a
   }
 
   private inline fun map(n: Int, f: (Int) -> Int): IntArray {
