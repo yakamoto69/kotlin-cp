@@ -129,6 +129,13 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
       }
     }
   }
+  private fun debugDim(A: Array<IntArray>) {
+    if (isDebug) {
+      for (a in A) {
+        debug(a)
+      }
+    }
+  }
 
   /**
    * 勝手にimport消されるのを防ぎたい

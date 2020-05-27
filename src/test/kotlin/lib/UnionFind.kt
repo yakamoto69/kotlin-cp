@@ -13,7 +13,9 @@ class UnionFind(n: Int) {
       i = par[i]
     }
 
-    repeat(ptr){ par[visits[it]] = i }
+    for (j in 0 until ptr) {
+      par[visits[j]] = i
+    }
     return i
   }
 
@@ -23,17 +25,21 @@ class UnionFind(n: Int) {
     return rt
   }
 
-  fun unite(x: Int, y: Int): Int {
+  fun unite(x: Int, y: Int): Boolean {
     val x1 = find(x)
     val y1 = find(y)
-    return if (x1 == y1) x1
+    return if (x1 == y1) false
     else {
       if (rank[x1] < rank[y1])
         merge(x1, y1)
       else
         merge(y1, x1)
+
+      true
     }
   }
+
+  fun isRoot(x: Int) = par[x] == x
 
   /**
     * xを解決する必要がないときは直にrankをみる

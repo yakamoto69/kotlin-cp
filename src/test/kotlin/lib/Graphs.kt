@@ -62,11 +62,13 @@ val INF = 1e18.toLong()
 fun dijk(g: Array<MutableList<Edge>>, s: Int): LongArray {
   val D = LongArray(g.size){INF}
   D[s] = 0
+  val visited = BooleanArray(g.size)
   val que = PriorityQueue<Visit>(compareBy { it.cost })
   que.add(Visit(s, 0))
   while(que.isNotEmpty()) {
     val v = que.poll()!!
-    if (v.cost != D[v.v]) continue
+    if (visited[v.v]) continue
+    visited[v.v] = true
 
     for (i in 0 until g[v.v].size) {
       val e = g[v.v][i]

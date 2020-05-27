@@ -4,7 +4,7 @@ package lib
  * 単調増加
  * (l, h] 方式
  */
-fun findMin(mn: Long, mx: Long, f: (Long) -> Boolean): Long {
+inline fun findMin(mn: Long, mx: Long, f: (Long) -> Boolean): Long {
   var low = mn - 1
   var high = mx
   while(high - low > 1) {
@@ -19,7 +19,7 @@ fun findMin(mn: Long, mx: Long, f: (Long) -> Boolean): Long {
  * 単調減少
  * [l, h) 方式
  */
-fun findMax(l: Long, r: Long, f: (Long) -> Boolean): Long {
+inline fun findMax(l: Long, r: Long, f: (Long) -> Boolean): Long {
   var low = l
   var high = r + 1
   while(high - low > 1) {

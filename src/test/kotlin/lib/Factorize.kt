@@ -1,21 +1,19 @@
 package lib
 
-fun factorize(a: Int): MutableMap<Int, Int> {
-  val res = mutableMapOf<Int, Int>()
+fun factorize(a: Int): List<Pair<Int, Int>> {
+  val res = mutableListOf<Pair<Int, Int>>()
   var x = a
-  loop@while(x > 1) {
-    var i = 2
-    while(i * i <= x) {
-      if (x % i == 0) {
-        res.merge(i, 1, Int::plus)
-        x /= i
-        continue@loop
-      }
-      i++
+  var i = 2 // 2L
+  while(i * i <= x) {
+    var cnt = 0
+    while (x % i == 0) {
+      cnt++
+      x /= i
     }
-    res.merge(x, 1, Int::plus)
-    x = 0
+    if (cnt > 0) res += Pair(i, cnt)
+    i++
   }
+  if (x > 1) res += Pair(x, 1)
   return res
 }
 

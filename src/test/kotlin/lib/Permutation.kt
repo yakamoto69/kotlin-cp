@@ -37,14 +37,14 @@ fun nextPermutation(A: IntArray): Boolean {
     A[j] = tmp
   }
 
-  fun reverse(l: Int, r: Int) {
-    val len = r - l
-    for (i in 0 until (len + 1) / 2) {
-      swap(l + i, r - 1 - i)
+  tailrec fun reverse(l: Int, r: Int) {
+    if (r - l > 1) {
+      swap(l, r - 1)
+      reverse(l + 1, r - 1)
     }
   }
 
-  fun binSearch(l: Int, r: Int, x: Int): Int {
+  tailrec fun binSearch(l: Int, r: Int, x: Int): Int {
     val med = (l + r) / 2
     return if (r - l == 1) l
     else if (A[med] > x) binSearch(med, r, x)

@@ -16,6 +16,8 @@ class RangeUpdateTree(n: Int,
 
   private val dat = IntArray(2 * N){zero}
 
+//  private inline fun f(a: Int, b: Int) = a + b
+
   /**
    * [l, r)
    */
