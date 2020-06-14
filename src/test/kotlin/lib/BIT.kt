@@ -1,6 +1,8 @@
 package lib
 
-class BIT(n: Int) {
+import kotlin.math.min
+
+class BIT(val n: Int) {
   private val N =
     if (Integer.highestOneBit(n) == n) n
     else Integer.highestOneBit(n) shl 1
@@ -23,5 +25,23 @@ class BIT(n: Int) {
       bit[x] += a
       x += x and -x
     }
+  }
+
+
+  private inline fun sub(a: Int, b: Int) = a - b
+  private inline fun lt(a: Int, b: Int) = a < b
+
+  fun lowerBound(W: Int): Int {
+    var k = N
+    var x = 0
+    var w = W
+    while(k > 0) {
+      if (x + k <= N && lt(bit[x + k], w)) {
+        w = sub(w, bit[x + k])
+        x += k
+      }
+      k /= 2
+    }
+    return min(n, x)
   }
 }

@@ -43,6 +43,24 @@ fun packUGraph(n: Int, from: IntArray, to: IntArray): Array<IntArray> {
   return g
 }
 
+/**
+ * よくある親の配列で木を初期化するやつ
+ */
+fun packTree(n: Int, P: IntArray): Array<IntArray> {
+  val p = IntArray(n)
+  val m = n - 1
+  for (i in 0 until m) {
+    ++p[P[i]]
+    ++p[i + 1]
+  }
+  val g = Array(n){IntArray(p[it])}
+  for (i in 0 until m) {
+    g[i + 1][--p[i + 1]] = P[i]
+    g[P[i]][--p[P[i]]] = i + 1
+  }
+  return g
+}
+
 fun packDGraph(n: Int, from: IntArray, to: IntArray): Array<IntArray> {
   val p = IntArray(n)
   val m = from.size
@@ -79,4 +97,91 @@ fun dijk(g: Array<MutableList<Edge>>, s: Int): LongArray {
     }
   }
   return D
+}
+
+fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
+  data class Edge(val i: Int, val v: Int) // 外に出せ
+  val que = IntArray(n + 10)
+  val nodeFlag = IntArray(n)
+  val visitedEdge = BooleanArray(m)
+  val g = Array(n){ mutableListOf<Edge>()}
+  for (i in 0 until m) {
+    g[from[i]].add(Edge(i, to[i]))
+    g[to[i]].add(Edge(i, from[i]))
+  }
+  fun dfs(rt: Int): List<Int>?  {
+    fun step(i: Int, u: Int): List<Int>? {
+      que[i] = u
+      nodeFlag[u] = 1
+      for (e in g[u]) {
+        if (visitedEdge[e.i]) continue
+        visitedEdge[e.i] = true
+        when(nodeFlag[e.v]) {
+          1 -> {
+            val ix = que.indexOf(e.v)
+            val ans = mutableListOf<Int>()
+            for (j in ix..i) {
+              ans += que[j]
+            }
+            return ans
+          }
+          0 -> {
+            val res = step(i + 1, e.v)
+            if (res != null) return res
+          }
+          else -> {}
+        }
+      }
+      nodeFlag[u] = 2
+      return null
+    }
+
+    return step(0, rt)
+  }
+
+  for (u in 0 until n) {
+    if (nodeFlag[u] == 0) {
+      val res = dfs(u)
+      if (res != null) return res
+    }
+  }
+  return null
+}
+
+fun shrinkCycle(N: Int, M: Int, from: IntArray, to: IntArray, cycle: List<Int>): List<Int> {
+  val L = IntArray(N)
+  val R = IntArray(N)
+  for (i in 0 until cycle.size) {
+    R[cycle[i]] = cycle[(i + 1) % cycle.size]
+    L[cycle[i]] = cycle[(cycle.size + i - 1) % cycle.size]
+  }
+  var rt = -1
+  val set = BooleanArray(N)
+  for (u in cycle) {
+    set[u] = true
+    rt = u
+  }
+  var size = cycle.size
+  for (i in 0 until M) {
+    val u = from[i]
+    val v = to[i]
+    if (set[u] && set[v] && L[u] != v && R[u] != v) {
+      while(size > 3 && R[u] != v) {
+        size--
+        set[R[u]] = false
+        val k = R[R[u]]
+        R[u] = k
+        L[k] = u
+      }
+      rt = u
+    }
+  }
+  val res = mutableListOf<Int>()
+  res += rt
+  var cur = R[rt]
+  while(cur != rt) {
+    res += cur
+    cur = R[cur]
+  }
+  return res
 }
