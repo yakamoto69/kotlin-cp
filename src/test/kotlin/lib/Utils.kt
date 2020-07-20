@@ -25,3 +25,11 @@ fun upperBound(A: IntArray, s: Int, x: Int): Int {
   }
   return h
 }
+
+fun startThread() {
+  val th = Thread(null, Runnable {
+
+  },"", 1 shl 26)
+  th.start()
+  th.join()
+}
