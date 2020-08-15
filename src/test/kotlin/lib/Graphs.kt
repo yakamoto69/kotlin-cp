@@ -98,6 +98,29 @@ fun dijk(g: Array<MutableList<Edge>>, s: Int): LongArray {
   }
   return D
 }
+fun dijk2(g: Array<IntArray>, s: Int): LongArray {
+  val n = g.size
+  val D = LongArray(n){INF}
+  D[s] = 0
+  val visited = BooleanArray(n)
+  val que = IntArray(n)
+  var h = 0
+  var t = 0
+  que[h++] = s
+  while(h > t) {
+    val u = que[t++]
+    if (visited[u]) continue
+    visited[u] = true
+
+    for (v in g[u]) {
+      if (D[u] + 1 < D[v]) {
+        D[v] = D[u] + 1
+        que[h++] = v
+      }
+    }
+  }
+  return D
+}
 
 fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
   data class Edge(val i: Int, val v: Int) // 外に出せ
@@ -184,4 +207,31 @@ fun shrinkCycle(N: Int, M: Int, from: IntArray, to: IntArray, cycle: List<Int>):
     cur = R[cur]
   }
   return res
+}
+
+fun topologicalSort(n: Int, g: Array<IntArray>): IntArray? {
+  val res = IntArray(n)
+  var ptr = 0
+  val que = ArrayDeque<Int>()
+  val deg = IntArray(n)
+
+  for (u in 0 until n) {
+    for (v in g[u]) {
+      deg[v]++
+    }
+  }
+
+  for (u in 0 until n) {
+    if (deg[u] == 0) que.add(u)
+  }
+
+  while(que.isNotEmpty()) {
+    val u = que.poll()
+    res[ptr++] = u
+    for (v in g[u]) {
+      if (--deg[v] == 0) que.add(v)
+    }
+  }
+
+  return if (ptr < n) null else res
 }

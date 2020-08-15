@@ -3,7 +3,7 @@ package lib
 fun factorize(a: Int): List<Pair<Int, Int>> {
   val res = mutableListOf<Pair<Int, Int>>()
   var x = a
-  var i = 2 // 2L
+  var i = 2 // 2L **Longに注意**
   while(i * i <= x) {
     var cnt = 0
     while (x % i == 0) {

@@ -25,6 +25,10 @@ class Comb(n: Int, val mod: Int) {
     return F[n] * I[k] % mod * I[n - k] % mod
   }
 
+  fun perm(n: Int, k: Int): Long {
+    return F[n] * I[n - k] % mod
+  }
+
   fun inv(x: Int): Long {
     return I[x] * F[x - 1] % mod
   }

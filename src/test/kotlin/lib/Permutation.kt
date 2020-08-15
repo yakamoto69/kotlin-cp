@@ -62,3 +62,21 @@ fun nextPermutation(A: IntArray): Boolean {
     true
   }
 }
+
+fun countInversions(a: List<Int>): Long {
+  val n = a.size
+  val sorted = a.withIndex().sortedWith(compareBy { it.value })
+  val P = IntArray(n)
+  for (i in 0 until n) {
+    P[sorted[i].index] = i
+  }
+
+  var res = 0L
+  val bit = BIT(n)
+  for (i in n - 1 downTo 0) {
+    res += bit.sum(P[i])
+    bit.add(P[i], 1)
+  }
+
+  return res
+}
