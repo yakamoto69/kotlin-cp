@@ -122,6 +122,36 @@ fun dijk2(g: Array<IntArray>, s: Int): LongArray {
   return D
 }
 
+fun eulerTreeTour(N: Int, g: Array<IntArray>, rt: Int): Pair<IntArray, IntArray> {
+  val begin = IntArray(N)
+  val end = IntArray(N)
+  var id = 0
+  val ix = IntArray(N)
+  val que = IntArray(N)
+  val par = IntArray(N)
+  var t = -1
+  que[++t] = rt
+  par[rt] = -1
+  while(t >= 0) {
+    val u = que[t]
+    val i = ix[u]++
+    if (i == 0) {
+      begin[u] = id++
+    }
+    if (i == g[u].size) {
+      end[u] = id++
+      t--
+    } else {
+      val v = g[u][i]
+      if (par[u] == v) continue
+      par[v] = u
+      que[++t] = v
+    }
+  }
+
+  return Pair(begin, end)
+}
+
 fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
   data class Edge(val i: Int, val v: Int) // 外に出せ
   val que = IntArray(n + 10)
