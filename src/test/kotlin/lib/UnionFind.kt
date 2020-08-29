@@ -2,7 +2,7 @@ package lib
 
 class UnionFind(n: Int) {
   private val par = IntArray(n){it}
-  val rank = IntArray(n){1} // 集合の要素数
+  private val rank = IntArray(n){1} // 集合の要素数
   private val visits = IntArray(n) // 訪れた場所をfind毎に用意するのがもったいないのでつかいまわす
 
   fun find(x: Int): Int {
@@ -39,10 +39,14 @@ class UnionFind(n: Int) {
     }
   }
 
+  fun isSame(x: Int, y: Int) = find(x) == find(y)
+
   fun isRoot(x: Int) = par[x] == x
 
   /**
     * xを解決する必要がないときは直にrankをみる
     */
   fun cntNodes(x: Int): Int = rank[find(x)]
+
+  fun inspect() = run{par}
 }

@@ -4,25 +4,38 @@ import java.util.*
 
 /**
  * (dist, parent, queue)
+ * @param rt ルートノードを指定する。nullの場合は全ノード辿るまで繰り返す
  */
-fun traceBfs(g: Array<IntArray>, rt: Int = 0): Array<IntArray> {
+fun traceBfs(g: Array<IntArray>, rt: Int? = 0): Array<IntArray> {
   val n = g.size
   val q = IntArray(n)
   val d = IntArray(n)
   val p = IntArray(n){-2}
-  var cur = 0
-  var last = 1
-  p[rt] = -1
-  q[0] = rt
-  d[rt] = 0
-  while (cur < last) {
-    val v = q[cur++]
-    for (u in g[v]) {
-      if (p[u] == -2) {
-        p[u] = v
-        q[last++] = u
-        d[u] = d[v] + 1
+  var h = 0
+  var t = 0
+
+  fun bfs(rt: Int) {
+    p[rt] = -1
+    q[t++] = rt
+    d[rt] = 0
+    while (h < t) {
+      val v = q[h++]
+      for (u in g[v]) {
+        if (p[u] == -2) {
+          p[u] = v
+          q[t++] = u
+          d[u] = d[v] + 1
+        }
       }
+    }
+  }
+
+  if (rt != null) {
+    bfs(rt)
+  } else {
+    for (u in 0 until n) {
+      if (p[u] != -2) continue
+      bfs(u)
     }
   }
   return arrayOf(d, p, q)
@@ -264,4 +277,16 @@ fun topologicalSort(n: Int, g: Array<IntArray>): IntArray? {
   }
 
   return if (ptr < n) null else res
+}
+
+fun testBipartite(N: Int, g: Array<IntArray>, D: IntArray): Boolean {
+  for (u in 0 until N) {
+    for (v in g[u]) {
+      if (D[v] % 2 == D[u] % 2) {
+        return false
+      }
+    }
+  }
+
+  return true
 }

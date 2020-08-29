@@ -1,16 +1,19 @@
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.AssertionError
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-val MOD = 1_000_000_007L
+val MOD = 1_000_000_007
 
 class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
+  private val reader = BufferedReader(InputStreamReader(stream), 32768)
+
+  private val N = ni()
   fun solve() {
-    val N = ni()
     out.println(N)
   }
 
@@ -66,7 +69,6 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   }
 
   private var tokenizer: StringTokenizer? = null
-  private val reader = BufferedReader(InputStreamReader(stream), 32768)
   private fun next(): String {
     while (tokenizer == null || !tokenizer!!.hasMoreTokens()) {
       tokenizer = StringTokenizer(reader.readLine())
@@ -110,26 +112,26 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     if (isDebug) System.err.println(msg())
   }
 
-  private fun debug(a: LongArray) {
+  private inline fun debug(a: LongArray) {
     debug { a.joinToString(" ") }
   }
 
-  private fun debug(a: IntArray) {
+  private inline fun debug(a: IntArray) {
     debug { a.joinToString(" ") }
   }
 
-  private fun debug(a: BooleanArray) {
+  private inline fun debug(a: BooleanArray) {
     debug { a.map { if (it) 1 else 0 }.joinToString("") }
   }
 
-  private fun debugDim(A: Array<LongArray>) {
+  private inline fun debugDim(A: Array<LongArray>) {
     if (isDebug) {
       for (a in A) {
         debug(a)
       }
     }
   }
-  private fun debugDim(A: Array<IntArray>) {
+  private inline fun debugDim(A: Array<IntArray>) {
     if (isDebug) {
       for (a in A) {
         debug(a)
@@ -145,6 +147,8 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     max(1, 2)
     abs(-10)
   }
+
+  private inline fun assert(b: Boolean) = run{if (!b) throw AssertionError()}
 }
 
 fun main() {

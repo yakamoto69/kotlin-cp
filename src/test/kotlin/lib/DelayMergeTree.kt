@@ -10,8 +10,8 @@ class DelayMergeTree(n: Int) {
   private val value = IntArray(N * 2)
   private val delay = IntArray(N * 2)
 
-  private fun push(k: Int) {
-    if (k < N) {
+  private inline fun push(k: Int) {
+    if (k < N && delay[k] != 0) {
       value[k * 2] += delay[k]
       value[k * 2 + 1] += delay[k]
       delay[k * 2] += delay[k]

@@ -1,7 +1,7 @@
 package lib
 
 /**
- * @param merge ツリーを↑に上がっていくときのマージ関数
+ * @param merge ツリーを↑に上がっていくときのマージ関数 todo merge(a, a) = a でない場合要素数いるんじゃない？
  * @param plus addでノードを更新する関数 (昔の値, 要素数, 引数)
  */
 class DelayMergeTree2(n: Int,
@@ -22,7 +22,7 @@ class DelayMergeTree2(n: Int,
     }
   }
 
-  private fun push(k: Int) {
+  private inline fun push(k: Int) {
     if (k < N && delay[k] != pZero) {
       value[k * 2] = plus(value[k * 2], elms[k * 2], delay[k])
       value[k * 2 + 1] = plus(value[k * 2 + 1], elms[k * 2 + 1], delay[k])

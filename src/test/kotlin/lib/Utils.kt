@@ -46,3 +46,18 @@ fun startThread() {
   th.start()
   th.join()
 }
+
+private val D = arrayOf(
+  intArrayOf(1, 0),
+  intArrayOf(0, 1),
+  intArrayOf(-1, 0),
+  intArrayOf(0, -1)
+)
+private inline fun iter_D(N: Int, M: Int, r: Int, c: Int) {
+  for (d in D) {
+    val nr = r + d[0]
+    val nc = c + d[1]
+    if (nr in (0 until N) && nc in (0 until M)) {
+    }
+  }
+}
