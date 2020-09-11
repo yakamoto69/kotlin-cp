@@ -24,6 +24,7 @@ object LinearFunction {
       a /= d
       b /= d
     } else {
+      // vectorを計算するときはb=abs(b), a=abs(a)にする
       if (a == 0) b = 1
       else a = 1
     }

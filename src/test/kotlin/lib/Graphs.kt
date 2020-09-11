@@ -19,12 +19,12 @@ fun traceBfs(g: Array<IntArray>, rt: Int? = 0): Array<IntArray> {
     q[t++] = rt
     d[rt] = 0
     while (h < t) {
-      val v = q[h++]
-      for (u in g[v]) {
-        if (p[u] == -2) {
-          p[u] = v
-          q[t++] = u
-          d[u] = d[v] + 1
+      val u = q[h++]
+      for (v in g[u]) {
+        if (p[v] == -2) {
+          p[v] = u
+          q[t++] = v
+          d[v] = d[u] + 1
         }
       }
     }

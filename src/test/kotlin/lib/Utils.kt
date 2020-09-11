@@ -48,9 +48,9 @@ fun startThread() {
 }
 
 private val D = arrayOf(
-  intArrayOf(1, 0),
-  intArrayOf(0, 1),
   intArrayOf(-1, 0),
+  intArrayOf(0, 1),
+  intArrayOf(1, 0),
   intArrayOf(0, -1)
 )
 private inline fun iter_D(N: Int, M: Int, r: Int, c: Int) {
@@ -60,4 +60,14 @@ private inline fun iter_D(N: Int, M: Int, r: Int, c: Int) {
     if (nr in (0 until N) && nc in (0 until M)) {
     }
   }
+}
+
+// multisetの代わり
+private val cnt = mutableMapOf<Int, Int>()
+private inline fun add(i: Int): Int {
+  return cnt.merge(i, 1, Int::plus)!!
+}
+private inline fun remove(i: Int) {
+  val now = cnt.merge(i, -1, Int::plus)
+  if (now == 0) cnt.remove(i)
 }

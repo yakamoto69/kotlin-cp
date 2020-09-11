@@ -3,6 +3,7 @@ package lib
 /**
  * 単調増加
  * (l, h] 方式
+ * @return マッチするものがなかったらmx
  */
 inline fun findMin(mn: Long, mx: Long, f: (Long) -> Boolean): Long {
   var low = mn - 1
@@ -18,6 +19,7 @@ inline fun findMin(mn: Long, mx: Long, f: (Long) -> Boolean): Long {
 /**
  * 単調減少
  * [l, h) 方式
+ * @return マッチするものがなかったらl
  */
 inline fun findMax(l: Long, r: Long, f: (Long) -> Boolean): Long {
   var low = l

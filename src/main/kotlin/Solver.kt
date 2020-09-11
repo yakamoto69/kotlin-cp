@@ -80,7 +80,7 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   private fun nl() = next().toLong()
   private fun ns() = next()
   private fun na(n: Int, offset: Int = 0): IntArray {
-    return map(n) { ni() + offset }
+    return IntArray(n) { ni() + offset }
   }
   private fun nal(n: Int, offset: Int = 0): LongArray {
     val res = LongArray(n)
@@ -100,14 +100,6 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     return a
   }
 
-  private inline fun map(n: Int, f: (Int) -> Int): IntArray {
-    val res = IntArray(n)
-    for (i in 0 until n) {
-      res[i] = f(i)
-    }
-    return res
-  }
-
   private inline fun debug(msg: () -> String) {
     if (isDebug) System.err.println(msg())
   }
@@ -121,8 +113,10 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   }
 
   private inline fun debug(a: BooleanArray) {
-    debug { a.map { if (it) 1 else 0 }.joinToString("") }
+    debug { toString(a) }
   }
+
+  private inline fun toString(a: BooleanArray) = run{a.map { if (it) 1 else 0 }.joinToString("")}
 
   private inline fun debugDim(A: Array<LongArray>) {
     if (isDebug) {
@@ -132,6 +126,13 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     }
   }
   private inline fun debugDim(A: Array<IntArray>) {
+    if (isDebug) {
+      for (a in A) {
+        debug(a)
+      }
+    }
+  }
+  private inline fun debugDim(A: Array<BooleanArray>) {
     if (isDebug) {
       for (a in A) {
         debug(a)

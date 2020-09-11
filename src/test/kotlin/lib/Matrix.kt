@@ -1,6 +1,15 @@
 package lib
 
 fun powMat(a: Array<LongArray>, n: Long, mod: Int): Array<LongArray> {
+  fun I() = run {
+    Array(a.size){
+      val res = LongArray(a.size)
+      res[it] = 1
+      res
+    }
+  }
+
+  if (n == 0L) return I()
   if (n == 1L) return a
   val res = powMat(mulMat(a, a, mod), n / 2, mod)
   return if (n % 2 == 1L) mulMat(res, a, mod) else res
