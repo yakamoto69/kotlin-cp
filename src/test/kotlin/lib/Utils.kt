@@ -2,9 +2,8 @@ package lib
 
 /**
  * countLt みたいなもの
- * [l, r) 方式
  */
-fun lowerBound(A: IntArray, s: Int, x: Int): Int {
+fun lb(A: IntArray, x: Int, s: Int = 0): Int {
   var l = s - 1
   var h = A.size
   while(h - l > 1) {
@@ -70,4 +69,12 @@ private inline fun add(i: Int): Int {
 private inline fun remove(i: Int) {
   val now = cnt.merge(i, -1, Int::plus)
   if (now == 0) cnt.remove(i)
+}
+
+private fun makePow2(N: Int, MOD: Int) {
+  val pow2 = LongArray(N + 1)
+  pow2[0] = 1
+  for (i in 1 until pow2.size) {
+    pow2[i] = pow2[i - 1] * 2 % MOD
+  }
 }

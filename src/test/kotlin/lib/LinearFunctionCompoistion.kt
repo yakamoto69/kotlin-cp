@@ -16,7 +16,7 @@ class LinearFunctionCompositionBIT(private val N: Int) {
   }
 
   fun calc(x: Int): Int {
-    return c1.sum(x + 1) * x + c0.sum(x + 1)
+    return c1.sumUntil(x + 1) * x + c0.sumUntil(x + 1)
   }
 }
 

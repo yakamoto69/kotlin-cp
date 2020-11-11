@@ -74,7 +74,7 @@ fun countInversions(a: List<Int>): Long {
   var res = 0L
   val bit = BIT(n)
   for (i in n - 1 downTo 0) {
-    res += bit.sum(P[i])
+    res += bit.sumUntil(P[i])
     bit.add(P[i], 1)
   }
 

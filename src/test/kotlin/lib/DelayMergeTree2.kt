@@ -49,7 +49,7 @@ class DelayMergeTree2(n: Int,
     val rgt = lft + 1
     add(a, b, x, lft, l, m)
     add(a, b, x, rgt, m, r)
-    value[k] = plus(value[k], elms[k], merge(value[lft], value[rgt]))
+    value[k] = merge(value[lft], value[rgt])
   }
 
   /**

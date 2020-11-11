@@ -9,7 +9,7 @@ class BIT(val n: Int) {
 
   private val bit = IntArray(N + 1)
 
-  fun sum(i: Int): Int {
+  fun sumUntil(i: Int): Int {
     var x = i
     var s = 0
     while(x > 0) {
