@@ -290,3 +290,34 @@ fun testBipartite(N: Int, g: Array<IntArray>, D: IntArray): Boolean {
 
   return true
 }
+
+/**
+ * @return (path, from, to)
+ */
+fun buildEulerTourPath(N: Int, g: Array<IntArray>, par: IntArray, que: IntArray): Triple<IntArray, IntArray, IntArray> {
+  val dp = IntArray(N)
+  for (i in N - 1 downTo 0) {
+    val u = que[i]
+    dp[u] = 1
+    for (v in g[u]) {
+      if (v == par[v]) continue
+      dp[u] += dp[v]
+    }
+  }
+
+  val path = IntArray(2 * N) { -1 }
+  val from = IntArray(N)
+  val to = IntArray(N)
+  for (u in que) {
+    path[from[u]] = u
+    path[from[u] + 2 * dp[u] - 1] = u
+    to[u] = from[u] + 2 * dp[u] - 1
+    var add = 1
+    for (v in g[u]) {
+      if (v == par[u]) continue
+      from[v] = from[u] + add
+      add += 2 * dp[v]
+    }
+  }
+  return Triple(path, from, to)
+}
