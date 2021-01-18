@@ -34,4 +34,12 @@ class LCA(N: Int, val dist: IntArray, par: IntArray, val K: Int) {
     }
     return anc[0][u]
   }
+
+  /**
+   * (dist, lca)
+   */
+  fun distance(v: Int, u: Int): Pair<Int, Int> {
+    val w = lca(v, u)
+    return Pair(dist[v] + dist[u] - dist[w]*2, w)
+  }
 }

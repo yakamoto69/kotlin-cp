@@ -22,6 +22,7 @@ class Comb(n: Int, val mod: Int) {
   }
 
   fun comb(n: Int, k: Int): Long {
+    if (n < k) return 0L
     return F[n] * I[k] % mod * I[n - k] % mod
   }
 

@@ -63,10 +63,10 @@ private inline fun iter_D(N: Int, M: Int, r: Int, c: Int) {
 
 // multisetの代わり
 private val cnt = mutableMapOf<Int, Int>()
-private inline fun add(i: Int): Int {
+private inline fun incr(i: Int): Int {
   return cnt.merge(i, 1, Int::plus)!!
 }
-private inline fun remove(i: Int) {
+private inline fun decr(i: Int) {
   val now = cnt.merge(i, -1, Int::plus)
   if (now == 0) cnt.remove(i)
 }
