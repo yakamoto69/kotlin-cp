@@ -3,8 +3,8 @@ package lib
 /**
  * countLt みたいなもの
  */
-fun lb(A: IntArray, x: Int, s: Int = 0): Int {
-  var l = s - 1
+fun lb(A: IntArray, x: Int): Int {
+  var l = - 1
   var h = A.size
   while(h - l > 1) {
     val m = (h + l) / 2
@@ -14,8 +14,8 @@ fun lb(A: IntArray, x: Int, s: Int = 0): Int {
   return h
 }
 
-fun upperBound(A: IntArray, s: Int, x: Int): Int {
-  var l = s - 1
+fun upperBound(A: IntArray, x: Int): Int {
+  var l = - 1
   var h = A.size
   while(h - l > 1) {
     val m = (h + l) / 2
@@ -62,7 +62,7 @@ private inline fun iter_D(N: Int, M: Int, r: Int, c: Int) {
 }
 
 // multisetの代わり
-private val cnt = mutableMapOf<Int, Int>()
+private val cnt = HashMap<Int, Int>() // TreeMapにすると遅いので気をつける
 private inline fun incr(i: Int): Int {
   return cnt.merge(i, 1, Int::plus)!!
 }

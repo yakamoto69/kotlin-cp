@@ -48,21 +48,28 @@ class DelayMergeTree(n: Int) {
 
   /**
    * @param x 左右どちらからか最初に a > x になる場所を探す
-   * @return -1
+   * @param fromR 右から探すか
+   * @return 見つからなかったら -1
    */
-  fun query(x: Int, k: Int = 1, l: Int = 0, r: Int = N): Int {
+  fun query(x: Int, k: Int = 1, l: Int = 0, r: Int = N, fromR: Boolean = true): Int {
     if (!contains(value[k], x)) return -1
-    if (l + 1 == r) return r // 1-indexed
+    if (l + 1 == r) return l
 
     push(k)
     val m = (l + r) / 2
     val lft = k * 2
     val rgt = lft + 1
 
-    // 右から探す。左から探したい場合は左右を逆にすればいい
-    val ans = query(x, rgt, m, r)
-    if (ans != -1) return ans
-    return query(x, lft, l, m)
+    if (fromR) {
+      val ans = query(x, rgt, m, r, fromR)
+      if (ans != -1) return ans
+      return query(x, lft, l, m, fromR)
+    }
+    else {
+      val ans = query(x, lft, l, m, fromR)
+      if (ans != -1) return ans
+      return query(x, rgt, m, r, fromR)
+    }
   }
 
   fun eval(i: Int): Int {
