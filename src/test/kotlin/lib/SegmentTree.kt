@@ -1,6 +1,12 @@
 package lib
 
 class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
+  /**
+   * 3e5回以上呼ばれるようだとinlineしたほうがいいかも
+   * Int::plusは結構遅い
+   */
+//  private val zero = 0
+//  private inline fun f(a: Int, b: Int) = a + b
   private val N =
     if (Integer.highestOneBit(n) == n) n
     else Integer.highestOneBit(n) shl 1
@@ -63,6 +69,12 @@ class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
   }
 }
 class SegmentTreeL(n: Int, val zero: Long, val f: (Long, Long) -> Long) {
+  /**
+   * 3e5回以上呼ばれるようだとinlineしたほうがいいかも
+   * Long::plusは結構遅い
+   */
+//  private val zero = 0L
+//  private inline fun f(a: Long, b: Long) = a + b
   private val N =
     if (Integer.highestOneBit(n) == n) n
     else Integer.highestOneBit(n) shl 1

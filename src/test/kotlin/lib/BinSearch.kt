@@ -32,6 +32,17 @@ inline fun findMax(l: Long, r: Long, f: (Long) -> Boolean): Long {
   return low
 }
 
+inline fun findMin(l: Double, r: Double, f: (Double) -> Boolean): Double {
+  var low = l - 1
+  var high = r
+  for (i in 0 until 100) { // 固定で100回。精度考えたくない
+    val m = (low + high) / 2
+    if (f(m)) high = m
+    else low = m
+  }
+  return high
+}
+
 inline fun findMax(l: Double, r: Double, f: (Double) -> Boolean): Double {
   var low = l
   var high = r + 1

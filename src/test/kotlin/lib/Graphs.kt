@@ -19,12 +19,13 @@ fun traceBfs(g: Array<IntArray>, rt: Int? = 0): Array<IntArray> {
     q[t++] = rt
     d[rt] = 0
     while (h < t) {
-      val u = q[h++]
-      for (v in g[u]) {
-        if (p[v] == -2) {
-          p[v] = u
-          q[t++] = v
-          d[v] = d[u] + 1
+      val v = q[h++]
+      for (i in g[v].indices) { // List<Int>に変更したときこちらの方法でないとiterator生成して遅くなる
+        val u = g[v][i]
+        if (p[u] == -2) {
+          p[u] = v
+          q[t++] = u
+          d[u] = d[v] + 1
         }
       }
     }
@@ -33,9 +34,9 @@ fun traceBfs(g: Array<IntArray>, rt: Int? = 0): Array<IntArray> {
   if (rt != null) {
     bfs(rt)
   } else {
-    for (u in 0 until n) {
-      if (p[u] != -2) continue
-      bfs(u)
+    for (v in 0 until n) {
+      if (p[v] != -2) continue
+      bfs(v)
     }
   }
   return arrayOf(d, p, q)
@@ -121,14 +122,15 @@ fun dijk2(g: Array<IntArray>, s: Int): LongArray {
   var t = 0
   que[h++] = s
   while(h > t) {
-    val u = que[t++]
-    if (visited[u]) continue
-    visited[u] = true
+    val v = que[t++]
+    if (visited[v]) continue
+    visited[v] = true
 
-    for (v in g[u]) {
-      if (D[u] + 1 < D[v]) {
-        D[v] = D[u] + 1
-        que[h++] = v
+    for (i in g[v].indices) {
+      val u = g[v][i]
+      if (D[v] + 1 < D[u]) {
+        D[u] = D[v] + 1
+        que[h++] = u
       }
     }
   }
@@ -146,19 +148,19 @@ fun eulerTreeTour(N: Int, g: Array<IntArray>, rt: Int): Pair<IntArray, IntArray>
   que[++t] = rt
   par[rt] = -1
   while(t >= 0) {
-    val u = que[t]
-    val i = ix[u]++
+    val v = que[t]
+    val i = ix[v]++
     if (i == 0) {
-      begin[u] = id++
+      begin[v] = id++
     }
-    if (i == g[u].size) {
-      end[u] = id++
+    if (i == g[v].size) {
+      end[v] = id++
       t--
     } else {
-      val v = g[u][i]
-      if (par[u] == v) continue
-      par[v] = u
-      que[++t] = v
+      val u = g[v][i]
+      if (par[v] == u) continue
+      par[u] = v
+      que[++t] = u
     }
   }
 
@@ -176,29 +178,30 @@ fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
     g[to[i]].add(Edge(i, from[i]))
   }
   fun dfs(rt: Int): List<Int>?  {
-    fun step(i: Int, u: Int): List<Int>? {
-      que[i] = u
-      nodeFlag[u] = 1
-      for (e in g[u]) {
+    fun step(pos: Int, v: Int): List<Int>? {
+      que[pos] = v
+      nodeFlag[v] = 1
+      for (i in g[v].indices) {
+        val e = g[v][i]
         if (visitedEdge[e.i]) continue
         visitedEdge[e.i] = true
         when(nodeFlag[e.v]) {
           1 -> {
             val ix = que.indexOf(e.v)
             val ans = mutableListOf<Int>()
-            for (j in ix..i) {
+            for (j in ix..pos) {
               ans += que[j]
             }
             return ans
           }
           0 -> {
-            val res = step(i + 1, e.v)
+            val res = step(pos + 1, e.v)
             if (res != null) return res
           }
           else -> {}
         }
       }
-      nodeFlag[u] = 2
+      nodeFlag[v] = 2
       return null
     }
 
@@ -252,37 +255,44 @@ fun shrinkCycle(N: Int, M: Int, from: IntArray, to: IntArray, cycle: List<Int>):
   return res
 }
 
+/**
+ * @return node->order　じゃなくて、nodeのリストを返す。
+ */
 fun topologicalSort(n: Int, g: Array<IntArray>): IntArray? {
-  val res = IntArray(n)
+  val res = IntArray(n){-1}
   var ptr = 0
   val que = ArrayDeque<Int>()
   val deg = IntArray(n)
 
-  for (u in 0 until n) {
-    for (v in g[u]) {
-      deg[v]++
+  for (v in 0 until n) {
+    for (o in g[v]) {
+      deg[o]++
     }
   }
 
-  for (u in 0 until n) {
-    if (deg[u] == 0) que.add(u)
+  for (v in 0 until n) {
+    if (deg[v] == 0) que.add(v)
   }
 
   while(que.isNotEmpty()) {
-    val u = que.poll()
-    res[ptr++] = u
-    for (v in g[u]) {
-      if (--deg[v] == 0) que.add(v)
+    val v = que.poll()
+    res[ptr++] = v
+    for (i in g[v].indices) {
+      val o = g[v][i]
+      if (--deg[o] == 0) que.add(o)
     }
   }
 
+  // 全部に順序がつかないとループがあったってこと
+  // グラフにでてこないノードにも順序がつく
   return if (ptr < n) null else res
 }
 
 fun testBipartite(N: Int, g: Array<IntArray>, D: IntArray): Boolean {
-  for (u in 0 until N) {
-    for (v in g[u]) {
-      if (D[v] % 2 == D[u] % 2) {
+  for (v in 0 until N) {
+    for (i in g[v].indices) {
+      val u = g[v][i]
+      if (D[u] % 2 == D[v] % 2) {
         return false
       }
     }
@@ -297,26 +307,29 @@ fun testBipartite(N: Int, g: Array<IntArray>, D: IntArray): Boolean {
 fun buildEulerTourPath(N: Int, g: Array<IntArray>, par: IntArray, que: IntArray): Triple<IntArray, IntArray, IntArray> {
   val dp = IntArray(N)
   for (i in N - 1 downTo 0) {
-    val u = que[i]
-    dp[u] = 1
-    for (v in g[u]) {
-      if (v == par[v]) continue
-      dp[u] += dp[v]
+    val v = que[i]
+    dp[v] = 1
+    for (j in g[v].indices) {
+      val u = g[v][j]
+      if (u == par[u]) continue
+      dp[v] += dp[u]
     }
   }
 
   val path = IntArray(2 * N) { -1 }
   val from = IntArray(N)
   val to = IntArray(N)
-  for (u in que) {
-    path[from[u]] = u
-    path[from[u] + 2 * dp[u] - 1] = u
-    to[u] = from[u] + 2 * dp[u] - 1
+  for (i in que.indices) {
+    val v = que[i]
+    path[from[v]] = v
+    path[from[v] + 2 * dp[v] - 1] = v
+    to[v] = from[v] + 2 * dp[v] - 1
     var add = 1
-    for (v in g[u]) {
-      if (v == par[u]) continue
-      from[v] = from[u] + add
-      add += 2 * dp[v]
+    for (j in g[v].indices) {
+      val u = g[v][j]
+      if (u == par[v]) continue
+      from[u] = from[v] + add
+      add += 2 * dp[u]
     }
   }
   return Triple(path, from, to)
