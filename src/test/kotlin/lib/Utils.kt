@@ -78,3 +78,21 @@ private fun makePow2(N: Int, MOD: Int) {
     pow2[i] = pow2[i - 1] * 2 % MOD
   }
 }
+
+/**
+ * 桁が大きすぎるとBigIntegerで間に合わなくなる
+ * 99 -> 100 のようなケースに対応するため、digitsは一桁多めに用意すること
+ */
+fun incr(digits: IntArray) {
+  var i = digits.size - 1
+  digits[i]++
+  while (digits[i] == 10) {
+    digits[i] = 0
+    digits[i - 1]++
+    i--
+  }
+}
+fun digitsStr(digits: IntArray): String {
+  val str = digits.joinToString("")
+  return if (str.startsWith("0")) str.drop(1) else str
+}

@@ -166,55 +166,86 @@ fun eulerTreeTour(N: Int, g: Array<IntArray>, rt: Int): Pair<IntArray, IntArray>
 
   return Pair(begin, end)
 }
-
-fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
-  data class Edge(val i: Int, val v: Int) // 外に出せ
-  val que = IntArray(n + 10)
-  val nodeFlag = IntArray(n)
-  val visitedEdge = BooleanArray(m)
-  val g = Array(n){ mutableListOf<Edge>()}
-  for (i in 0 until m) {
-    g[from[i]].add(Edge(i, to[i]))
-    g[to[i]].add(Edge(i, from[i]))
-  }
-  fun dfs(rt: Int): List<Int>?  {
-    fun step(pos: Int, v: Int): List<Int>? {
-      que[pos] = v
-      nodeFlag[v] = 1
-      for (i in g[v].indices) {
-        val e = g[v][i]
-        if (visitedEdge[e.i]) continue
-        visitedEdge[e.i] = true
-        when(nodeFlag[e.v]) {
-          1 -> {
-            val ix = que.indexOf(e.v)
-            val ans = mutableListOf<Int>()
-            for (j in ix..pos) {
-              ans += que[j]
+object cycle {
+  /**
+   * 無向グラフ用
+   * @return 見つからなかったらnull
+   * edgeで管理してるけど、dfsすれば必ず子->親のループになるので、そんなことせずにできる気がするけど
+   */
+  fun findCycle(n: Int, m: Int, from: IntArray, to: IntArray): List<Int>? {
+    data class Edge(val i: Int, val v: Int) // 外に出せ
+    val que = IntArray(n + 10)
+    val nodeFlag = IntArray(n)
+    val visitedEdge = BooleanArray(m)
+    val g = Array(n){ mutableListOf<Edge>()}
+    for (i in 0 until m) {
+      g[from[i]].add(Edge(i, to[i]))
+      g[to[i]].add(Edge(i, from[i]))
+    }
+    fun dfs(rt: Int): List<Int>?  {
+      fun step(pos: Int, v: Int): List<Int>? {
+        que[pos] = v
+        nodeFlag[v] = 1
+        for (i in g[v].indices) {
+          val e = g[v][i]
+          if (visitedEdge[e.i]) continue
+          visitedEdge[e.i] = true
+          when(nodeFlag[e.v]) {
+            1 -> {
+              val ix = que.indexOf(e.v)
+              val ans = mutableListOf<Int>()
+              for (j in ix..pos) {
+                ans += que[j]
+              }
+              return ans
             }
-            return ans
+            0 -> {
+              val res = step(pos + 1, e.v)
+              if (res != null) return res
+            }
+            else -> {}
           }
-          0 -> {
-            val res = step(pos + 1, e.v)
-            if (res != null) return res
-          }
-          else -> {}
+        }
+        nodeFlag[v] = 2
+        return null
+      }
+
+      return step(0, rt)
+    }
+
+    for (u in 0 until n) {
+      if (nodeFlag[u] == 0) {
+        val res = dfs(u)
+        if (res != null) return res
+      }
+    }
+    return null
+  }
+
+  /**
+   * UGraphというかツリーだけど
+   */
+  fun findCyclesInUGraph(N: Int, P: IntArray) {
+    val visited = IntArray(N)
+    val cycles = mutableListOf<List<Int>>()
+    val path = mutableListOf<Int>()
+    fun dfs(v: Int) {
+      visited[v] = 1
+      path += v
+      when (visited[P[v]]) {
+        0 -> dfs(P[v])
+        1 -> {
+          val ix = path.indexOf(P[v])
+          cycles += path.slice(ix..path.lastIndex)
+        }
+        else -> {
         }
       }
-      nodeFlag[v] = 2
-      return null
+      path.removeAt(path.lastIndex)
+      visited[v] = 2
     }
-
-    return step(0, rt)
+    dfs(0)
   }
-
-  for (u in 0 until n) {
-    if (nodeFlag[u] == 0) {
-      val res = dfs(u)
-      if (res != null) return res
-    }
-  }
-  return null
 }
 
 fun shrinkCycle(N: Int, M: Int, from: IntArray, to: IntArray, cycle: List<Int>): List<Int> {

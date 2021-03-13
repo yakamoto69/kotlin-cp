@@ -19,9 +19,9 @@ fun divisors(x: Int): MutableList<Int> {
   return res
 }
 
-fun powMod(a: Int, n: Long, mod: Int): Long {
+fun powMod(a: Long, n: Long, mod: Int): Long {
   if (n == 0L) return 1
-  val res = powMod((a.toLong() * a % mod).toInt(), n / 2, mod)
+  val res = powMod(a * a % mod, n / 2, mod)
   return if (n % 2 == 1L) res * a % mod else res
 }
 
