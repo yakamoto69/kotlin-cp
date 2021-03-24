@@ -29,7 +29,7 @@ class Zip(A: IntArray) {
       unq.sort()
       val codes = IntArray(A.size)
       for (i in A.indices) {
-        codes[i] = lb(codes, A[i])
+        codes[i] = lb(unq, A[i])
       }
       return Pair(codes, unq)
     }

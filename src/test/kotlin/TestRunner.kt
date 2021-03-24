@@ -113,9 +113,9 @@ private class TestRunner {
     }
 
     if (tests.all(::runTest)) {
-      println("SUCCESS ALL!")
+      println("!!!SUCCESS ALL!!!")
     } else {
-      println("FAILURE!")
+      println("***FAILURE***")
     }
   }
 }

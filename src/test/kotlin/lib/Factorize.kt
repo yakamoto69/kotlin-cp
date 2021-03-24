@@ -18,9 +18,9 @@ fun factorize(a: Int): List<Pair<Int, Int>> {
 }
 
 class Factorize(N: Int) {
-  val prime = IntArray(N)
-  val factor = IntArray(N + 1)
-  var p = 0
+  private val prime = IntArray(N)
+  private val factor = IntArray(N + 1)
+  private var p = 0
 
   init {
     for (i in 2..N) {
@@ -64,6 +64,11 @@ class Factorize(N: Int) {
     }
     return res
   }
+
+  /**
+   * (prime, factor, p)
+   */
+  fun get() = Triple(prime, factor, p)
 }
 
 fun Primes(MAX: Int) {
