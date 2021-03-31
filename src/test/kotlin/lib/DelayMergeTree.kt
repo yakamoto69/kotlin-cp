@@ -1,5 +1,7 @@
 package lib
 
+import kotlin.math.min
+
 /**
  * https://algo-logic.info/segment-tree/#toc_id_3 <-ここがわかりやすい
  */
@@ -28,8 +30,9 @@ class DelayMergeTree(val n: Int) {
 //  private inline fun ap(x: Long, m: Long) = m
 //  private inline fun fm(m1: Long, m2: Long) = m2
 //  private inline fun fp(m: Long, n: Int) = m*n
+//  private val inf = 2e18.toLong() + 100
 //  private val zeroX = 0L
-//  private val zeroM = 0L
+//  private val zeroM = -inf // 0だと0に更新を表現できない
 //  private inline fun contains(k: Int, x: Long): Boolean = false
 
   /*
@@ -66,12 +69,24 @@ class DelayMergeTree(val n: Int) {
 //  private inline fun fm(m1: Long, m2: Long) = m2
 //  private inline fun fp(m: Long, n: Int) = m
 //  private val zeroX = 0L
-//  private val zeroM = 0L
+//  private val zeroM = -1 // 0だと0に更新を表現できない
 //  private inline fun contains(k: Int, x: Long): Boolean = false // min/maxじゃないと使えない
 
-  private val N =
-    if (Integer.highestOneBit(n) == n) n
-    else Integer.highestOneBit(n) shl 1
+  private val log = log2_ceil(n)
+  private val N = 1 shl log
+
+  /**
+   * 最初に x<=2^k になるkを返す
+   */
+  fun log2_ceil(x: Int): Int {
+    var k = 0
+    var pow2 = 1L
+    while(pow2 < x) {
+      pow2 *= 2
+      k++
+    }
+    return k
+  }
 
   // zeroX, zeroMよりも前にあると初期化できなくなるので注意
   private val value = LongArray(N * 2){zeroX}
@@ -85,6 +100,15 @@ class DelayMergeTree(val n: Int) {
     }
     value[k] = ap(value[k], fp(delay[k], len))
     delay[k] = zeroM
+  }
+
+  private inline fun pushAll(a: Int, b: Int) {
+    val ka = a + N
+    val kb = b + N
+    for (j in log downTo 1) {
+      push(ka shr j, N shr j)
+      push(kb shr j, N shr j)
+    }
   }
 
   fun build(A: LongArray) {
@@ -134,8 +158,24 @@ class DelayMergeTree(val n: Int) {
   }
 
   fun get(i: Int): Long {
-    _eval(N + i, N)
-    return value[N + i]
+    val k = i + N
+    for (j in log downTo 0) {
+      push(k shr j, 1 shl j)
+    }
+    return value[k]
+  }
+
+  // todo 要テスト
+  fun set(i: Int, x: Long) {
+    val k = i + N
+    for (j in log downTo 0) {
+      push(k shr j, 1 shl j)
+    }
+    value[k] = x
+    for (j in 1 .. log) {
+      val kk = k shr j
+      value[kk] = fx(value[kk*2], value[kk*2 + 1])
+    }
   }
 
   /**
@@ -168,26 +208,28 @@ class DelayMergeTree(val n: Int) {
    * @return 最初にvalue>=xになるindexを返す。0-indexed 見つからなかったら n
    * fxがsum かつ 値に負がないことが条件
    */
-  fun lowerBound(x: Long, k: Int = 1, l: Int = 0, r: Int = N): Int {
-    push(k, r - l)
-    if (value[k] < x) return -1
-    if (l + 1 == r) return l
-
-    val m = (l + r) / 2
-    val lft = k * 2
-    val rgt = lft + 1
-
-    val ans = lowerBound(x, lft, l, m)
-    if (ans != -1) return ans
-    return lowerBound(x - value[lft], rgt, m, r)
-  }
-
-  fun _eval(k: Int, len: Int) {
-    if (k > 1) {
-      _eval(k / 2, len/2)
+  fun lowerBound(x: Long): Int {
+    var remain = x
+    var k = 1
+    var len = N
+    var res = 0
+    push(1, N)
+    for (i in 1 .. log) {
+      push(k*2, len/2)
+      if (value[k*2] < remain) {
+        remain -= value[k]
+        res += 1 shl (log - i)
+        k *= 2
+      }
+      else {
+        push(k + 1, len/2)
+        k = k*2 + 1
+      }
+      len /= 2
     }
-    push(k, len)
+    return min(n, res)
   }
 
   fun inspect() = run { Pair(value, delay) }
+  override fun toString() = "[${(0 until N).map { get(it) }.joinToString(" ")}]"
 }

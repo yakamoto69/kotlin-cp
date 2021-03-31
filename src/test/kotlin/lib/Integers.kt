@@ -56,6 +56,26 @@ private inline fun ceil_div(a: Long, b: Long): Long {
 }
 
 /**
+ * x < a/b を満たす整数xの最大
+ */
+private inline fun div_lt(a: Long, b: Long) = ceil_div(a, b) - 1
+
+/**
+ * x <= a/b を満たす整数xの最大
+ */
+private inline fun div_le(a: Long, b: Long) = floor_div(a, b)
+
+/**
+ * x > a/b を満たす整数xの最小
+ */
+private inline fun div_gt(a: Long, b: Long) = floor_div(a, b) + 1
+
+/**
+ * x >= a/b を満たす整数xの最小
+ */
+private inline fun div_ge(a: Long, b: Long) = ceil_div(a, b)
+
+/**
  * 結果が負だったら正にする
  */
 private inline fun safe_mod(a: Long, m: Long): Long {
