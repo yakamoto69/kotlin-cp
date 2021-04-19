@@ -334,8 +334,9 @@ fun testBipartite(N: Int, g: Array<IntArray>, D: IntArray): Boolean {
 
 /**
  * @return (path, from, to)
+ * ↑のeulerTreeTourと一緒だからまとめる
  */
-fun buildEulerTourPath(N: Int, g: Array<IntArray>, par: IntArray, que: IntArray): Triple<IntArray, IntArray, IntArray> {
+fun buildEulerTourPathOfTree(N: Int, g: Array<IntArray>, par: IntArray, que: IntArray): Triple<IntArray, IntArray, IntArray> {
   val dp = IntArray(N)
   for (i in N - 1 downTo 0) {
     val v = que[i]
@@ -364,4 +365,43 @@ fun buildEulerTourPath(N: Int, g: Array<IntArray>, par: IntArray, que: IntArray)
     }
   }
   return Triple(path, from, to)
+}
+
+/**
+ * @return 無向グラフの直径
+ */
+fun diameter(g: Array<IntArray>): Int {
+  val s = longest(g, 0).first
+  return longest(g, s).second
+}
+
+/**
+ * 無向グラフ対象で、sから一番離れているノードを探す
+ * @return (v, dist)
+ */
+fun longest(g: Array<IntArray>, s: Int): Pair<Int, Int> {
+  val (D, _) = traceBfs(g, s)
+  val dist = D.max()!!
+  return Pair(D.indexOf(dist), dist)
+}
+
+/**
+ * s -> t の最小パス
+ */
+fun route(g: Array<IntArray>, s: Int, t: Int): List<Int> {
+  val rt = mutableListOf<Int>()
+  val (D, _, _) = traceBfs(g, t)
+  var cur = s
+  rt += s
+  while(cur != t) {
+    for (i in g[cur].indices) {
+      val u = g[cur][i]
+      if (D[u] == D[cur] - 1) {
+        cur = u
+        rt += u
+        break
+      }
+    }
+  }
+  return rt
 }

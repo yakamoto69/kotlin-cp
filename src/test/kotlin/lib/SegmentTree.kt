@@ -1,5 +1,8 @@
 package lib
 
+/**
+ * ↓のSegmentTreeLを使うこと
+ */
 class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
   /**
    * 3e5回以上呼ばれるようだとinlineしたほうがいいかも
@@ -68,13 +71,16 @@ class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
     }
   }
 }
-class SegmentTreeL(n: Int, val zero: Long, val f: (Long, Long) -> Long) {
-  /**
-   * 3e5回以上呼ばれるようだとinlineしたほうがいいかも
-   * Long::plusは結構遅い
-   */
-//  private val zero = 0L
-//  private inline fun f(a: Long, b: Long) = a + b
+
+/**
+ * ↑のじゃなくてこっち使え
+ */
+class SegmentTreeL(val n: Int) {
+
+  private val zero = 0L
+  private inline fun fx(a: Long, b: Long) = a + b // sum
+  private inline fun ap(x: Long, m: Long) = m // 入れ替え
+
   private val N =
     if (Integer.highestOneBit(n) == n) n
     else Integer.highestOneBit(n) shl 1
@@ -83,9 +89,9 @@ class SegmentTreeL(n: Int, val zero: Long, val f: (Long, Long) -> Long) {
 
   fun update(i: Int, a: Long) {
     var ix = i + N
-    dat[ix] = a
+    dat[ix] = ap(dat[ix], a)
     while(ix > 1) {
-      dat[ix shr 1] = f(dat[ix], dat[ix xor 1])
+      dat[ix shr 1] = fx(dat[ix], dat[ix xor 1])
       ix = ix shr 1
     }
   }
@@ -99,14 +105,16 @@ class SegmentTreeL(n: Int, val zero: Long, val f: (Long, Long) -> Long) {
     var right = b - 1 + N
 
     while(left <= right) {
-      if ((left and 1) == 1) res = f(res, dat[left])
-      if ((right and 1) == 0) res = f(res, dat[right])
+      if ((left and 1) == 1) res = fx(res, dat[left])
+      if ((right and 1) == 0) res = fx(res, dat[right])
       left = (left + 1) shr 1 // 右の子供なら右の親に移動
       right = (right - 1) shr 1 // 左の子供なら左の親に移動
     }
 
     return res
   }
+
+  fun get(i: Int) = dat[N + i]
 
   // 条件を満たすか。maxなら '>' minなら '<' が使える
   private inline fun contains(a: Long, x: Long): Boolean = a < x
@@ -135,4 +143,6 @@ class SegmentTreeL(n: Int, val zero: Long, val f: (Long, Long) -> Long) {
       return find(x, a, b, LR, lft, l, m)
     }
   }
+
+  override fun toString() = "[${(0 until n).map{get(it)}.joinToString(" ")}]"
 }
