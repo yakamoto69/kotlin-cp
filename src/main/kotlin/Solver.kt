@@ -104,6 +104,9 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
     if (isDebug) System.err.println(msg())
   }
 
+  /**
+   * コーナーケースでエラー出たりするので、debug(dp[1])のように添え字付きの場合はdebug{}をつかうこと
+   */
   private inline fun debug(a: LongArray) {
     debug { a.joinToString(" ") }
   }
@@ -150,6 +153,7 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   }
 
   private inline fun assert(b: Boolean) = run{if (!b) throw AssertionError()}
+  private inline fun assert(b: Boolean, f: () -> String) = run{if (!b) throw AssertionError(f())}
 }
 
 fun main() {

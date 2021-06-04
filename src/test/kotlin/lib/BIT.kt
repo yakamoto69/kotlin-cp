@@ -46,7 +46,7 @@ class BIT(val n: Int) {
 
 
   private inline fun sub(a: Int, b: Int) = a - b
-  private inline fun lt(a: Int, b: Int) = a < b
+  private inline fun lt(a: Int, b: Int) = a < b // 演算を変えたら動かなくなりそう
 
   /**
    * ↑の中身変えること

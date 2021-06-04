@@ -386,6 +386,22 @@ fun longest(g: Array<IntArray>, s: Int): Pair<Int, Int> {
 }
 
 /**
+ * 連結、無向グラフの中心
+ */
+fun centerOfUGraph(g: Array<IntArray>): Pair<Int, Int?> {
+  val s = longest(g, 0).first
+  val t = longest(g, s).first
+  val rt = route(g, s, t)
+  val n = rt.size
+  return if (n % 2 == 0) {
+    Pair(rt[n/2 - 1], rt[n/2])
+  }
+  else {
+    Pair(rt[n/2], null)
+  }
+}
+
+/**
  * s -> t の最小パス
  */
 fun route(g: Array<IntArray>, s: Int, t: Int): List<Int> {

@@ -12,7 +12,7 @@ private class TestRunner {
     Default, In, Out
   }
 
-  data class Test(val name: String) {
+  data class Test(val i: Int, val name: String) {
     val input = StringBuilder()
     val output = StringBuilder()
   }
@@ -39,7 +39,7 @@ private class TestRunner {
   }
 
   private fun runTest(test: Test): Boolean {
-    println("[${test.name}]")
+    println("[${test.name}:${test.i}]")
 
     val out = ByteArrayOutputStream()
     val (_, time) = withStream(test.input.toString().byteInputStream(), PrintStream(out)) {
@@ -60,13 +60,15 @@ private class TestRunner {
     val tests = mutableListOf<Test>()
     val special = "\uD83D\uDE3A" // 😺
 
+    var i = 0
+
     file.forEachLine {
       when (s) {
         Default ->
           when {
             it.startsWith("${special}in") -> {
               s = In
-              tests.add(Test(it.split(' ')[1]))
+              tests.add(Test(i++, it.split(' ')[1]))
             }
             else -> {
             }
@@ -98,17 +100,6 @@ private class TestRunner {
 
     if (s != Default) {
       println("ERROR テストファイルの形式がおかしいです。 finish at $s")
-      return
-    }
-
-    val dupNames = tests
-      .groupBy{it.name}
-      .mapValues{it.value.size}
-      .filter{it.value > 1}
-      .map{it.key}
-
-    if (dupNames.isNotEmpty()) {
-      println("同じテスト名がありました。${dupNames.joinToString(" ")}")
       return
     }
 
