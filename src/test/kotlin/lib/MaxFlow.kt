@@ -4,9 +4,9 @@ import java.util.*
 import kotlin.math.min
 
 object MaxFlow {
-  data class Edge(val u: Int, val v: Int, var cap: Int)
-  data class RTEdge(val to: Int, var cap: Int, val rev: Int)
-  fun maxFlow(n: Int, E: List<Edge>, s: Int, t: Int, inf: Int): Int {
+  data class Edge(val u: Int, val v: Int, var cap: Long)
+  data class RTEdge(val to: Int, var cap: Long, val rev: Int)
+  fun maxFlow(n: Int, E: List<Edge>, s: Int, t: Int, inf: Long): Long {
     val level = IntArray(n)
     val iter = IntArray(n)
     val queue = IntArray(n)
@@ -33,7 +33,7 @@ object MaxFlow {
       }
     }
 
-    fun dfs(u: Int, f: Int): Int {
+    fun dfs(u: Int, f: Long): Long {
       if (u == t) return f
       while (iter[u] < g[u].size) {
         val e = g[u][iter[u]++]
@@ -49,7 +49,7 @@ object MaxFlow {
       return 0
     }
 
-    var flow = 0
+    var flow = 0L
     while (true) {
       Arrays.fill(iter, 0)
       Arrays.fill(level, -1)

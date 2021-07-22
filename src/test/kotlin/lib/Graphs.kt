@@ -296,7 +296,8 @@ fun topologicalSort(n: Int, g: Array<IntArray>): IntArray? {
   val deg = IntArray(n)
 
   for (v in 0 until n) {
-    for (o in g[v]) {
+    for (i in g[v].indices) {
+      val o = g[v][i]
       deg[o]++
     }
   }

@@ -154,10 +154,18 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
 
   private inline fun assert(b: Boolean) = run{if (!b) throw AssertionError()}
   private inline fun assert(b: Boolean, f: () -> String) = run{if (!b) throw AssertionError(f())}
+
+  companion object {
+    // TestRunnerから呼びたいので単純なmainじゃだめ
+    fun main() {
+      val out = java.io.PrintWriter(System.out)
+      Solver(System.`in`, out).solve()
+      out.flush()
+    }
+  }
 }
 
-fun main() {
-  val out = java.io.PrintWriter(System.out)
-  Solver(System.`in`, out).solve()
-  out.flush()
-}
+/**
+ * judgeから呼ばれる
+ */
+fun main() = Solver.main()

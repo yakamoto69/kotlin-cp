@@ -19,8 +19,9 @@ class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
   fun update(i: Int, a: Int) {
     var ix = i + N
     dat[ix] = a
-    while(ix > 1) {
-      dat[ix shr 1] = f(dat[ix], dat[ix xor 1])
+    ix = ix shr 1
+    while(ix >= 1) {
+      dat[ix] = f(dat[ix*2], dat[ix*2 + 1])
       ix = ix shr 1
     }
   }
@@ -29,18 +30,19 @@ class SegmentTree(n: Int, val zero: Int, val f: (Int, Int) -> Int) {
     * [a, b)
     */
   fun query(a: Int, b: Int): Int {
-    var res: Int = zero
+    var resL: Int = zero
+    var resR: Int = zero
     var left = a + N
     var right = b - 1 + N
 
     while(left <= right) {
-      if ((left and 1) == 1) res = f(res, dat[left])
-      if ((right and 1) == 0) res = f(res, dat[right])
+      if ((left and 1) == 1) resL = f(resL, dat[left])
+      if ((right and 1) == 0) resR = f(dat[right], resR)
       left = (left + 1) shr 1 // 右の子供なら右の親に移動
       right = (right - 1) shr 1 // 左の子供なら左の親に移動
     }
 
-    return res
+    return f(resL, resR)
   }
 
   // 条件を満たすか。maxなら '>' minなら '<' が使える
@@ -90,8 +92,9 @@ class SegmentTreeL(val n: Int) {
   fun update(i: Int, a: Long) {
     var ix = i + N
     dat[ix] = ap(dat[ix], a)
-    while(ix > 1) {
-      dat[ix shr 1] = fx(dat[ix], dat[ix xor 1])
+    ix = ix shr 1
+    while(ix >= 1) {
+      dat[ix] = fx(dat[ix*2], dat[ix*2 + 1])
       ix = ix shr 1
     }
   }
@@ -100,18 +103,19 @@ class SegmentTreeL(val n: Int) {
    * [a, b)
    */
   fun query(a: Int, b: Int): Long {
-    var res: Long = zero
+    var resL: Long = zero
+    var resR: Long = zero
     var left = a + N
     var right = b - 1 + N
 
     while(left <= right) {
-      if ((left and 1) == 1) res = fx(res, dat[left])
-      if ((right and 1) == 0) res = fx(res, dat[right])
+      if ((left and 1) == 1) resL = fx(resL, dat[left])
+      if ((right and 1) == 0) resR = fx(dat[right], resR)
       left = (left + 1) shr 1 // 右の子供なら右の親に移動
       right = (right - 1) shr 1 // 左の子供なら左の親に移動
     }
 
-    return res
+    return fx(resL, resR)
   }
 
   fun get(i: Int) = dat[N + i]
@@ -143,6 +147,53 @@ class SegmentTreeL(val n: Int) {
       return find(x, a, b, LR, lft, l, m)
     }
   }
+
+  override fun toString() = "[${(0 until n).map{get(it)}.joinToString(" ")}]"
+}
+
+typealias A = IntArray
+class SegmentTreeA(val n: Int, val zero: A) {
+
+//  private val zero: A = ???
+  private inline fun fx(a: A, b: A) = a
+  private inline fun ap(x: A, m: A) = m // 入れ替え
+
+  private val N =
+    if (Integer.highestOneBit(n) == n) n
+    else Integer.highestOneBit(n) shl 1
+
+  private val dat = Array<A>(2*N){zero}
+
+  fun update(i: Int, a: A) {
+    var ix = i + N
+    dat[ix] = ap(dat[ix], a)
+    ix = ix shr 1
+    while(ix >= 1) {
+      dat[ix] = fx(dat[ix*2], dat[ix*2 + 1])
+      ix = ix shr 1
+    }
+  }
+
+  /**
+   * [a, b)
+   */
+  fun query(a: Int, b: Int): A {
+    var resL: A = zero
+    var resR: A = zero
+    var left = a + N
+    var right = b - 1 + N
+
+    while(left <= right) {
+      if ((left and 1) == 1) resL = fx(resL, dat[left])
+      if ((right and 1) == 0) resR = fx(dat[right], resR)
+      left = (left + 1) shr 1 // 右の子供なら右の親に移動
+      right = (right - 1) shr 1 // 左の子供なら左の親に移動
+    }
+
+    return fx(resL, resR)
+  }
+
+  fun get(i: Int) = dat[N + i]
 
   override fun toString() = "[${(0 until n).map{get(it)}.joinToString(" ")}]"
 }

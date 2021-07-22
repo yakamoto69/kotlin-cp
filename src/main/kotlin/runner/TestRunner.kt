@@ -1,9 +1,13 @@
+package runner
+
 import java.io.*
-import TestRunner.State.*
 import java.lang.StringBuilder
 
+/**
+ * Solverと同じ階層においておくと、ファイルのアップロード失敗するかもしれないからrunnerパッケージに入れる
+ */
 fun main(arg: Array<String>) {
-  val file = File(TestRunner::class.java.getResource(arg[0])!!.toURI())
+  val file = File(TestRunner::class.java.getResource("/${arg[0]}")!!.toURI())
   TestRunner().call(file)
 }
 
@@ -43,7 +47,7 @@ private class TestRunner {
 
     val out = ByteArrayOutputStream()
     val (_, time) = withStream(test.input.toString().byteInputStream(), PrintStream(out)) {
-      elapse { main() }
+      elapse { Solver.main() }
     }
     val result = out.toString().trim()
     val expected = test.output.toString().trim()
@@ -56,7 +60,7 @@ private class TestRunner {
   }
 
   fun call(file: File) {
-    var s: State = Default
+    var s: State = State.Default
     val tests = mutableListOf<Test>()
     val special = "\uD83D\uDE3A" // 😺
 
@@ -64,20 +68,20 @@ private class TestRunner {
 
     file.forEachLine {
       when (s) {
-        Default ->
+        State.Default ->
           when {
             it.startsWith("${special}in") -> {
-              s = In
+              s = State.In
               tests.add(Test(i++, it.split(' ')[1]))
             }
             else -> {
             }
           }
 
-        In -> {
+        State.In -> {
           when (it) {
             "${special}out" -> {
-              s = Out
+              s = State.Out
             }
             else -> {
               tests.last().input.appendln(it)
@@ -85,10 +89,10 @@ private class TestRunner {
           }
         }
 
-        Out -> {
+        State.Out -> {
           when (it) {
             "${special}end" -> {
-              s = Default
+              s = State.Default
             }
             else -> {
               tests.last().output.appendln(it)
@@ -98,7 +102,7 @@ private class TestRunner {
       }
     }
 
-    if (s != Default) {
+    if (s != State.Default) {
       println("ERROR テストファイルの形式がおかしいです。 finish at $s")
       return
     }

@@ -43,3 +43,34 @@ class LCA(N: Int, val dist: IntArray, par: IntArray, val K: Int) {
     return Pair(dist[v] + dist[u] - dist[w]*2, w)
   }
 }
+
+/*
+  経路の最大weightを探す
+
+  private val anc2 = Array(K){IntArray(N)}
+  init {
+    for (u in 0 until N) {
+      anc[0][u] = if (dist[u] == 0) u else par[u]
+      anc2[0][u] = cost[u]
+    }
+    for (k in 1 until K) {
+      for (u in 0 until N) {
+        val w = anc[k - 1][u]
+        anc[k][u] = anc[k - 1][w]
+        anc2[k][u] = max(anc2[k - 1][u], anc2[k - 1][w])
+      }
+    }
+  }
+
+  fun cost(vv: Int, w: Int): Int {
+    var v = vv
+    var res = 0
+    for (k in K - 1 downTo 0) {
+      if (dist[anc[k][v]] >= dist[w]) {
+        res = max(res, anc2[k][v])
+        v = anc[k][v]
+      }
+    }
+    return res
+  }
+ */
