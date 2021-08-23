@@ -89,13 +89,15 @@ fun packDGraph(n: Int, from: IntArray, to: IntArray): Array<IntArray> {
 }
 
 data class Edge(val v: Int, val weight: Long)
-data class Visit(val v: Int, val cost: Long)
+data class Visit(val v: Int, val cost: Long) : Comparable<Visit> {
+  override fun compareTo(other: Visit): Int = cost.compareTo(other.cost)
+}
 val INF = 1e18.toLong()
 fun dijk(g: Array<MutableList<Edge>>, s: Int): LongArray {
   val D = LongArray(g.size){INF}
   D[s] = 0
   val visited = BooleanArray(g.size)
-  val que = PriorityQueue<Visit>(compareBy { it.cost })
+  val que = PriorityQueue<Visit>()
   que.add(Visit(s, 0))
   while(que.isNotEmpty()) {
     val v = que.poll()!!
@@ -168,6 +170,8 @@ fun eulerTreeTour(N: Int, g: Array<IntArray>, rt: Int): Pair<IntArray, IntArray>
 }
 object cycle {
   /**
+   * dfsするのでスタックサイズを増やす必要あり
+   *
    * 無向グラフ用
    * @return 見つからなかったらnull
    * edgeで管理してるけど、dfsすれば必ず子->親のループになるので、そんなことせずにできる気がするけど

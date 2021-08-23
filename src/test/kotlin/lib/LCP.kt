@@ -4,7 +4,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * (sa, rank)
+ * @return (sa, rank)
+ * 範囲は[0, N] 0には空文字が来る
  */
 fun suffixArray(s: String): Pair<IntArray, IntArray> {
   val n = s.length
