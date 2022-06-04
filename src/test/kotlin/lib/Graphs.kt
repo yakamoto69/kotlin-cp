@@ -4,6 +4,7 @@ import java.util.*
 
 /**
  * (dist, parent, queue)
+ * 有効グラフでは使わないように注意
  * @param rt ルートノードを指定する。nullの場合は全ノード辿るまで繰り返す
  */
 fun traceBfs(g: Array<IntArray>, rt: Int? = 0): Array<IntArray> {
@@ -227,13 +228,16 @@ object cycle {
   }
 
   /**
-   * UGraphというかツリーだけど
+   * 関数グラフをP配列で表現したものからサイクルを全て見つける
+   * @param -1のとき、そのノードからエッジが生えていない
    */
-  fun findCyclesInUGraph(N: Int, P: IntArray) {
+  fun findCyclesInFunctionalGraph(N: Int, P: IntArray): List<List<Int>> {
     val visited = IntArray(N)
     val cycles = mutableListOf<List<Int>>()
     val path = mutableListOf<Int>()
     fun dfs(v: Int) {
+      if (P[v] == -1) return
+
       visited[v] = 1
       path += v
       when (visited[P[v]]) {
@@ -248,7 +252,58 @@ object cycle {
       path.removeAt(path.lastIndex)
       visited[v] = 2
     }
-    dfs(0)
+    for (v in 0 until N) {
+      if (visited[v] == 0) dfs(v)
+    }
+    return cycles
+  }
+
+  /**
+   * 関数グラフの中でサイクルを見つけてサイクルに出てくるノードを一つのノードにまとめる
+   * 結果ノード番号を降り直す
+   * @return (N, P, (旧ノード -> 新ノード)のマップ)
+   */
+  fun squashCycleInFunctionalGraph(N0: Int, P0: IntArray): Triple<Int, IntArray, IntArray> {
+    val cycles = findCyclesInFunctionalGraph(N0, P0)
+    val uf = UnionFind(N0) // 関数グラフだとUnionFindなしでもいいけど
+    for (c in cycles) {
+      for (i in 0 until c.size - 1) {
+        uf.unite(c[i], c[i + 1])
+      }
+    }
+    val map = IntArray(N0)
+    val newId = IntArray(N0){-1}
+    var N = 0
+    for (v in 0 until N0) {
+      val id = uf.find(v)
+      if (newId[id] == -1) {
+        newId[id] = N++
+      }
+      map[v] = newId[id]
+    }
+
+    // Pを作り直す
+    // mapがあれば計算できるのでここでやらなくてもいい
+    val P = IntArray(N){-1}
+    for (i in 0 until N0) {
+      if (P0[i] == -1) continue
+      val from = map[i]
+      val to = map[P0[i]]
+      if (from != to) {
+        P[from] = to
+      }
+    }
+
+    // weightをまとめる関数。結合即が成り立つ時だけ。ダメな時はグループごとに変換する
+    fun reduce(W0: IntArray, zero: Int, fn: (Int, Int) -> Int): IntArray {
+      val W = IntArray(N){zero}
+      for (v in 0 until N0) {
+        W[map[v]] = fn(W[map[v]], W0[v])
+      }
+      return W
+    }
+
+    return Triple(N, P, map)
   }
 }
 

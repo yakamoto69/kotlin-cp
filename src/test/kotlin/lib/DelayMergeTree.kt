@@ -5,7 +5,7 @@ import kotlin.math.min
 /**
  * https://algo-logic.info/segment-tree/#toc_id_3 <-ここがわかりやすい
  */
-class DelayMergeTree(val n: Int, A: LongArray) {
+class DelayMergeTree(val n: Int, val A: LongArray) {
   /*
     fx: x同士の結合
     fa: mをxに作用させる
@@ -46,7 +46,30 @@ class DelayMergeTree(val n: Int, A: LongArray) {
 //  private inline fun fp(m: Long, n: Int) = m
 //  private val inf = 2e18.toLong() + 100
 //  private val zeroX = inf
-//  private val zeroM = inf
+//  private val zeroM = inf + 1
+//  private inline fun contains(k: Int, x: Long): Boolean = value[k] < x
+
+  /*
+    (max, 入れ替え)
+   */
+//  private inline fun fx(x1: Long, x2: Long) = max(x1, x2)
+//  private inline fun ap(x: Long, m: Long) = if (m == zeroM) x else m
+//  private inline fun fm(m1: Long, m2: Long) = if (m2 == zeroM) m1 else m2
+//  private inline fun fp(m: Long, n: Int) = m
+//  private val zeroX = inf
+//  private val zeroM = inf - 1
+//  private inline fun contains(k: Int, x: Long): Boolean = value[k] > x
+
+  /*
+    (min, +)
+  */
+//  private inline fun fx(x1: Long, x2: Long) = min(x1, x2)
+//  private inline fun ap(x: Long, m: Long) = x + m
+//  private inline fun fm(m1: Long, m2: Long) = m1 + m2
+//  private inline fun fp(m: Long, n: Int) = m
+//  private val inf = 2e18.toLong() + 100
+//  private val zeroX = inf
+//  private val zeroM = 0L
 //  private inline fun contains(k: Int, x: Long): Boolean = value[k] < x
 
   /*
@@ -69,7 +92,7 @@ class DelayMergeTree(val n: Int, A: LongArray) {
 //  private inline fun fm(m1: Long, m2: Long) = if (m2 == zeroM) m1 else m2
 //  private inline fun fp(m: Long, n: Int) = if (n%2 == 1) m else zeroX
 //  private val zeroX = 0L
-//  private val zeroM = -2e18.toLong()
+//  private val zeroM = -5e18.toLong()
 //  private inline fun contains(k: Int, x: Long): Boolean = false // min/maxじゃないと使えない
 
   private val log = log2_ceil(n)
@@ -99,6 +122,24 @@ class DelayMergeTree(val n: Int, A: LongArray) {
     for (k in N - 1 downTo 1) {
       value[k] = fx(value[2*k], value[2*k + 1])
     }
+  }
+
+  private fun init() {
+    for (k in n - 1 downTo 0) {
+      value[N + k] = A[k]
+    }
+    for (k in N - 1 downTo 1) {
+      value[k] = fx(value[2*k], value[2*k + 1])
+    }
+  }
+
+  init {
+    init()
+  }
+
+  fun clear() {
+    init()
+    delay.fill(zeroM)
   }
 
   private inline fun push(k: Int, len: Int) {
@@ -235,7 +276,7 @@ class DelayMergeTree(val n: Int, A: LongArray) {
    * @param fromR 右から探すか
    * @return 見つからなかったら -1
    */
-  fun query(x: Long, k: Int = 1, l: Int = 0, r: Int = N, fromR: Boolean = true): Int {
+  fun find(x: Long, k: Int = 1, l: Int = 0, r: Int = N, fromR: Boolean = true): Int {
     push(k, r - l)
     if (!contains(k, x)) return -1
     if (l + 1 == r) return l
@@ -245,14 +286,14 @@ class DelayMergeTree(val n: Int, A: LongArray) {
     val rgt = lft + 1
 
     if (fromR) {
-      val ans = query(x, rgt, m, r, fromR)
+      val ans = find(x, rgt, m, r, fromR)
       if (ans != -1) return ans
-      return query(x, lft, l, m, fromR)
+      return find(x, lft, l, m, fromR)
     }
     else {
-      val ans = query(x, lft, l, m, fromR)
+      val ans = find(x, lft, l, m, fromR)
       if (ans != -1) return ans
-      return query(x, rgt, m, r, fromR)
+      return find(x, rgt, m, r, fromR)
     }
   }
 

@@ -39,6 +39,21 @@ tailrec fun gcd(a: Int, b: Int): Int {
 }
 
 /**
+ * @return x<=0 -> -1なので注意
+ */
+private inline fun log2_floor(x: Int): Int {
+  if (x <= 0) return -1
+  var low = 0
+  var high = 31
+  while(high - low > 1) {
+    val m = (low + high) / 2
+    if (1 shl m <= x) low = m
+    else high = m
+  }
+  return low
+}
+
+/**
  * a, bがマイナスでもうまいこと動く
  */
 private inline fun floor_div(a: Long, b: Long): Long {

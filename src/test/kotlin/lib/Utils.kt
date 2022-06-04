@@ -84,12 +84,12 @@ private fun makePow2(N: Int, MOD: Int) {
  * 99 -> 100 のようなケースに対応するため、digitsは一桁多めに用意すること
  */
 fun incr(digits: IntArray) {
-  var i = digits.size - 1
+  var i = 0
   digits[i]++
   while (digits[i] == 10) {
     digits[i] = 0
-    digits[i - 1]++
-    i--
+    digits[i + 1]++
+    i++
   }
 }
 fun digitsStr(digits: IntArray): String {

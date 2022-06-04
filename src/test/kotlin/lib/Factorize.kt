@@ -47,6 +47,24 @@ class Factorize(N: Int) {
   }
 
   /**
+   * (primes, counts)
+   */
+  fun factors(x: Int): Pair<MutableList<Int>, MutableList<Int>> {
+    var prev = 0
+    val primes = mutableListOf<Int>()
+    val counts = mutableListOf<Int>()
+    factorize(x) { p ->
+      if (prev != p) {
+        primes += p
+        counts += 0
+      }
+      counts[counts.lastIndex - 1]++
+      prev = p
+    }
+    return Pair(primes, counts)
+  }
+
+  /**
    * 因数分解の結果を p1*p1*p2 -> primes:[p1, p2] primeCnt:[2, 1], lst: 2
    * で受けとって、perm で使う因数の個数を管理しながら約数を生成する
    */

@@ -12,8 +12,8 @@ val MOD = 1_000_000_007
 class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   private val reader = BufferedReader(InputStreamReader(stream), 32768)
 
-  private val N = ni()
   fun solve() {
+    val N = ni()
     out.println(N)
   }
 
