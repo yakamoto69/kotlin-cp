@@ -115,15 +115,6 @@ class DelayMergeTree(val n: Int, val A: LongArray) {
   private val value = LongArray(N * 2) // initで初期化する
   private val delay = LongArray(N * 2){zeroM}
 
-  init {
-    for (k in n - 1 downTo 0) {
-      value[N + k] = A[k]
-    }
-    for (k in N - 1 downTo 1) {
-      value[k] = fx(value[2*k], value[2*k + 1])
-    }
-  }
-
   private fun init() {
     for (k in n - 1 downTo 0) {
       value[N + k] = A[k]
@@ -185,15 +176,6 @@ class DelayMergeTree(val n: Int, val A: LongArray) {
       push(ka shr j, len)
       if (ka shr j != kb shr j) push(kb shr j, len)
       len /= 2
-    }
-  }
-
-  fun build(A: LongArray) {
-    for (i in A.indices) {
-      value[N + i] = A[i]
-    }
-    for (k in N - 1 downTo 0) {
-      value[k] = fx(value[k*2], value[k*2 + 1])
     }
   }
 

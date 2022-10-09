@@ -8,6 +8,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 val MOD = 1_000_000_007
+//val MOD = 998244353
 
 class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   private val reader = BufferedReader(InputStreamReader(stream), 32768)
@@ -158,6 +159,7 @@ class Solver(stream: InputStream, private val out: java.io.PrintWriter) {
   companion object {
     // TestRunnerから呼びたいので単純なmainじゃだめ
     fun main() {
+//      val out = java.io.PrintWriter(FileOutputStream("./out.txt"))
       val out = java.io.PrintWriter(System.out)
       Solver(System.`in`, out).solve()
       out.flush()

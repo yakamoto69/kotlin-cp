@@ -17,12 +17,15 @@ class GroupedArray(val N: Int, val M: Int) {
     cnt[g]++
   }
 
+  /**
+   * setGroupを呼んだ順序
+   */
   fun elements(g: Int): IntArray? {
     if (cnt[g] == 0) return null
 
     val res = IntArray(cnt[g])
     var cur = rt[g]
-    for (i in 0 until cnt[g]) {
+    for (i in cnt[g] - 1 downTo 0) {
       res[i] = cur
       cur = next[cur]
     }

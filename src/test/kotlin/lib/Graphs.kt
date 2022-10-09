@@ -58,6 +58,22 @@ fun packUGraph(n: Int, from: IntArray, to: IntArray): Array<IntArray> {
   return g
 }
 
+data class Edge0(val v: Int, val u: Int, val weight: Long)
+fun packUGraph2(n: Int, e: Array<Edge0>): Array<Array<Edge>> {
+  val p = IntArray(n)
+  val m = e.size
+  for (i in 0 until m) {
+    ++p[e[i].v]
+    ++p[e[i].u]
+  }
+  val g = Array(n){ arrayOfNulls<Edge>(p[it]) }
+  for (i in 0 until m) {
+    g[e[i].v][--p[e[i].v]] = Edge(e[i].u, e[i].weight)
+    g[e[i].u][--p[e[i].u]] = Edge(e[i].v, e[i].weight)
+  }
+  return g as Array<Array<Edge>>
+}
+
 /**
  * よくある親の配列で木を初期化するやつ
  */
@@ -93,7 +109,7 @@ data class Edge(val v: Int, val weight: Long)
 data class Visit(val v: Int, val cost: Long) : Comparable<Visit> {
   override fun compareTo(other: Visit): Int = cost.compareTo(other.cost)
 }
-val INF = 1e18.toLong()
+val INF = 2e18.toLong() + 100
 fun dijk(g: Array<MutableList<Edge>>, s: Int): LongArray {
   val D = LongArray(g.size){INF}
   D[s] = 0
