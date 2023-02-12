@@ -246,6 +246,8 @@ object cycle {
   /**
    * 関数グラフをP配列で表現したものからサイクルを全て見つける
    * @param -1のとき、そのノードからエッジが生えていない
+   *
+   * %%注意%% dfsなのでheepを大きくすること
    */
   fun findCyclesInFunctionalGraph(N: Int, P: IntArray): List<List<Int>> {
     val visited = IntArray(N)
